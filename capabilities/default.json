@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "identifier": "default",
+  "description": "Права по умолчанию для главного окна Teams Linux. Доступ к этим командам из веб-контента разрешён ТОЛЬКО пока webview находится на одном из доменов Microsoft ниже — см. поле remote.urls. Если страница уйдёт на посторонний домен (например, фишинговая ссылка из чата), мост window.__TAURI__ перестаёт быть доступен ещё до того, как сработает on_navigation-блокировка в src/main.rs.",
+  "windows": ["main"],
+  "remote": {
+    "urls": [
+      "https://teams.microsoft.com/*",
+      "https://*.teams.microsoft.com/*",
+      "https://*.microsoftonline.com/*",
+      "https://*.office.com/*",
+      "https://*.office365.com/*",
+      "https://*.live.com/*",
+      "https://*.msftauth.net/*",
+      "https://*.msauth.net/*",
+      "https://*.sharepoint.com/*",
+      "https://*.skype.com/*"
+    ]
+  },
+  "permissions": [
+    "core:default",
+    "core:window:allow-show",
+    "core:window:allow-hide",
+    "core:window:allow-set-focus",
+    "core:window:allow-start-dragging",
+    "core:event:allow-listen",
+    "core:event:allow-emit",
+    "notification:default",
+    "notification:allow-notify",
+    "global-shortcut:default",
+    "global-shortcut:allow-register",
+    "global-shortcut:allow-unregister",
+    "opener:default",
+    "opener:allow-open-url",
+    "dialog:default",
+    "autostart:default",
+    "autostart:allow-enable",
+    "autostart:allow-disable",
+    "autostart:allow-is-enabled"
+  ]
+}

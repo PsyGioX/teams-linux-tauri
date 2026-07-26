@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Teams Linux
+GenericName=Microsoft Teams
+Comment=Microsoft Teams с глубокой интеграцией GNOME
+Exec=teams-linux %U
+Icon=teams-linux
+Terminal=false
+Categories=Network;InstantMessaging;Office;
+StartupWMClass=teams-linux
+MimeType=x-scheme-handler/msteams;x-scheme-handler/teams;
+Keywords=teams;chat;video;call;microsoft;

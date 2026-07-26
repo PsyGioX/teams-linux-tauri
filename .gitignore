@@ -1,0 +1,6 @@
+/target
+/node_modules
+Cargo.lock
+*.deb
+*.AppImage
+.DS_Store

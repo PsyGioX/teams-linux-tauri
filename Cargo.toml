@@ -1,0 +1,39 @@
+[package]
+name = "teams-linux"
+version = "0.1.0"
+edition = "2021"
+description = "Неофициальный клиент Microsoft Teams для Linux (Debian/GNOME) на Tauri с глубокой системной интеграцией"
+authors = ["Sergey Sklyarov <psygiox-dev.vercel.app>"]
+license = "MIT"
+repository = "https://github.com/psygiox/teams-linux-tauri"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon", "image-png"] }
+tauri-plugin-opener = "2"
+tauri-plugin-single-instance = "2"
+tauri-plugin-deep-link = "2"
+tauri-plugin-global-shortcut = "2"
+tauri-plugin-notification = "2"
+tauri-plugin-autostart = "2"
+tauri-plugin-dialog = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+zbus = { version = "4", default-features = false, features = ["tokio"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "process", "io-util", "time"] }
+dirs = "5"
+log = "0.4"
+futures-util = { version = "0.3", default-features = false, features = ["std"] }
+
+[[bin]]
+name = "teams-linux"
+path = "src/main.rs"
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true

@@ -27,6 +27,17 @@ if [ "$PKG_MANAGER" = "dnf" ]; then
     patchelf \
     pkgconf-pkg-config \
     rpm-build
+
+  echo "==> Установка GStreamer-плагинов для WebRTC (звонки/встречи Teams)"
+  echo "    webkit2gtk использует GStreamer для RTCPeerConnection/getUserMedia:"
+  echo "    без webrtcbin (из gstreamer1-plugins-bad-free) звонок не заработает."
+  sudo dnf install -y \
+    gstreamer1-plugins-base \
+    gstreamer1-plugins-good \
+    gstreamer1-plugins-bad-free \
+    libnice \
+    gstreamer1-libav || \
+    echo "    Внимание: gstreamer1-libav обычно приходит из RPM Fusion (H264 для звонков); Teams в браузере обычно использует VP8, так что это не строго обязательно, но при желании подключите RPM Fusion: https://rpmfusion.org/Configuration"
 else
   sudo zypper install -y \
     gcc gcc-c++ make curl wget file git \
@@ -39,6 +50,15 @@ else
     patchelf \
     pkgconf-pkg-config \
     rpm-build
+
+  echo "==> Установка GStreamer-плагинов для WebRTC (звонки/встречи Teams)"
+  sudo zypper install -y \
+    gstreamer-plugins-base \
+    gstreamer-plugins-good \
+    gstreamer-plugins-bad \
+    libnice \
+    gstreamer-plugins-libav || \
+    echo "    Внимание: gstreamer-plugins-ugly/libav (H264) обычно приходят из репозитория Packman: https://en.opensuse.org/Additional_package_repositories#Packman"
 fi
 
 if ! command -v cargo >/dev/null 2>&1; then

@@ -14,7 +14,16 @@
       "https://*.msftauth.net/*",
       "https://*.msauth.net/*",
       "https://*.sharepoint.com/*",
-      "https://*.skype.com/*"
+      "https://*.skype.com/*",
+      "https://*.cloud.microsoft/*",
+      "https://*.static.microsoft/*",
+      "https://*.usercontent.microsoft/*",
+      "https://aka.ms/*",
+      "https://*.1drv.ms/*",
+      "https://*.microsoftstream.com/*",
+      "https://*.yammer.com/*",
+      "https://*.windows.net/*",
+      "https://*.windowsazure.com/*"
     ]
   },
   "permissions": [

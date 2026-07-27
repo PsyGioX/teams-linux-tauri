@@ -21,12 +21,32 @@ pub fn build_tray(app: &AppHandle) -> tauri::Result<()> {
         true,
         None::<&str>,
     )?;
+    let about_item = MenuItem::with_id(app, "about", "О программе", true, None::<&str>)?;
+    let devtools_item = MenuItem::with_id(
+        app,
+        "devtools",
+        "Открыть инструменты разработчика",
+        true,
+        None::<&str>,
+    )?;
     let quit_item = MenuItem::with_id(app, "quit", "Выход", true, None::<&str>)?;
     let separator = PredefinedMenuItem::separator(app)?;
+    let separator2 = PredefinedMenuItem::separator(app)?;
+    let separator3 = PredefinedMenuItem::separator(app)?;
 
     let menu = Menu::with_items(
         app,
-        &[&open_item, &dnd_item, &separator, &logout_item, &quit_item],
+        &[
+            &open_item,
+            &dnd_item,
+            &separator,
+            &logout_item,
+            &about_item,
+            &separator2,
+            &devtools_item,
+            &separator3,
+            &quit_item,
+        ],
     )?;
 
     let app_for_events = app.clone();
@@ -62,14 +82,39 @@ pub fn build_tray(app: &AppHandle) -> tauri::Result<()> {
                         match crate::session::clear_session(app.clone()) {
                             Ok(_) => {
                                 log::info!("Сессия очищена, завершаю приложение");
-                                app.exit(0);
+                                graceful_quit(&app);
                             }
                             Err(e) => log::error!("Не удалось очистить сессию: {e}"),
                         }
                     });
             }
+            "about" => {
+                app.dialog()
+                    .message(format!(
+                        "Teams Linux {}\n\n\
+                         Неофициальный клиент Microsoft Teams для Debian/GNOME.\n\
+                         Не аффилирован с Microsoft.\n\n\
+                         Автор: PsyGioX (PsyGioX)\n\
+                         GitHub: github.com/PsyGioX/teams-linux-tauri",
+                        env!("CARGO_PKG_VERSION")
+                    ))
+                    .title("О программе")
+                    .kind(MessageDialogKind::Info)
+                    .show(|_| {});
+            }
+            "devtools" => {
+                // Открывает встроенный WebKit Inspector поверх окна Teams.
+                // Полезно, когда звонок/встреча не запускаются: вкладка
+                // Console покажет реальную ошибку JS (например, Teams
+                // калькинг-стек calling-pluginless-*.js пишет туда, почему
+                // именно он отказался стартовать звонок), а не догадки.
+                if let Some(window) = app.get_webview_window("main") {
+                    let _ = window.show();
+                    window.open_devtools();
+                }
+            }
             "quit" => {
-                app.exit(0);
+                graceful_quit(app);
             }
             _ => {}
         })
@@ -95,6 +140,28 @@ pub fn build_tray(app: &AppHandle) -> tauri::Result<()> {
     });
 
     Ok(())
+}
+
+/// Плавный выход вместо мгновенного `app.exit(0)`.
+///
+/// Раньше выход через трей (и закрытие окна крестиком, до соответствующего
+/// фикса в src/main.rs) мгновенно убивал процесс. webkit2gtk пишет куки и
+/// localStorage сессии Teams на диск асинхронно, через idle-колбэки GLib
+/// main loop — при резком `exit()` этот loop не успевает докрутиться, и
+/// часть сессии терялась, из-за чего при следующем запуске Teams требовал
+/// повторный логин ("разлогинивает при закрытии"). Здесь мы сначала скрываем
+/// окно (это уже само по себе даёт webkit2gtk сигнал на паузу/сохранение),
+/// затем ждём короткую паузу, давая GLib-циклу обработать отложенные задачи
+/// записи на диск, и только потом завершаем процесс.
+fn graceful_quit(app: &AppHandle) {
+    if let Some(window) = app.get_webview_window("main") {
+        let _ = window.hide();
+    }
+    let app = app.clone();
+    tauri::async_runtime::spawn(async move {
+        tokio::time::sleep(std::time::Duration::from_millis(500)).await;
+        app.exit(0);
+    });
 }
 
 /// Пишет число непрочитанных в ~/.local/share/teams-linux/unread-count,

@@ -29,7 +29,7 @@
   "bundle": {
     "active": true,
     "targets": ["deb", "rpm"],
-    "publisher": "Sergey Sklyarov",
+    "publisher": "PsyGioX",
     "category": "SocialNetworking",
     "shortDescription": "Microsoft Teams для Linux с интеграцией GNOME",
     "longDescription": "Неофициальный обёрточный клиент Microsoft Teams (web v2) на Tauri с нативными уведомлениями через freedesktop DBus, треем, глобальными хоткеями mute/camera, синхронизацией темы и Do Not Disturb с GNOME.",
@@ -44,7 +44,11 @@
         "depends": [
           "libwebkit2gtk-4.1-0",
           "libayatana-appindicator3-1",
-          "libnotify4"
+          "libnotify4",
+          "gstreamer1.0-plugins-base",
+          "gstreamer1.0-plugins-good",
+          "gstreamer1.0-plugins-bad",
+          "gstreamer1.0-nice"
         ],
         "desktopTemplate": "packaging/teams-linux.desktop"
       },
@@ -52,7 +56,11 @@
         "depends": [
           "webkit2gtk4.1",
           "libappindicator-gtk3",
-          "libnotify"
+          "libnotify",
+          "gstreamer1-plugins-base",
+          "gstreamer1-plugins-good",
+          "gstreamer1-plugins-bad-free",
+          "libnice"
         ],
         "desktopTemplate": "packaging/teams-linux.desktop"
       }

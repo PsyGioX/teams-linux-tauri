@@ -17,6 +17,18 @@ sudo apt install -y \
   patchelf \
   pkg-config
 
+echo "==> Установка GStreamer-плагинов для WebRTC (звонки/встречи Teams)"
+echo "    webkit2gtk использует GStreamer для RTCPeerConnection/getUserMedia:"
+echo "    без gstreamer1.0-plugins-bad (webrtcbin) звонок не заработает,"
+echo "    даже если WebKitSettings настроены правильно."
+sudo apt install -y \
+  gstreamer1.0-plugins-base \
+  gstreamer1.0-plugins-good \
+  gstreamer1.0-plugins-bad \
+  gstreamer1.0-plugins-ugly \
+  gstreamer1.0-libav \
+  gstreamer1.0-nice
+
 if ! command -v cargo >/dev/null 2>&1; then
   echo "==> Rust не найден, устанавливаю через rustup"
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y

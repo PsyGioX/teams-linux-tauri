@@ -2,7 +2,7 @@
 Type=Application
 Name=Teams Linux
 Comment=Автозапуск Microsoft Teams в трее
-Exec=teams-linux --minimized
+Exec=env GDK_BACKEND=x11 teams-linux --minimized
 Icon=teams-linux
 Terminal=false
 X-GNOME-Autostart-enabled=true

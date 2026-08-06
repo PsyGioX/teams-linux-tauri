@@ -2,7 +2,7 @@
   "uuid": "teams-indicator@psygiox",
   "name": "Teams Linux Indicator",
   "description": "Счётчик непрочитанных Microsoft Teams в верхней панели GNOME (опционально, дублирует функцию трея appindicator)",
-  "shell-version": ["45", "46", "47", "48"],
+  "shell-version": ["45", "46", "47", "48", "49", "50", "51"],
   "url": "https://github.com/psygiox/teams-linux-tauri",
   "version": 1
 }
